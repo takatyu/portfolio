@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class FoldersTableSeeder extends Seeder
 {
@@ -18,6 +19,8 @@ class FoldersTableSeeder extends Seeder
         foreach ($titles as $title) {
             DB::table('folders')->insert([
                 'title' => $title,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }
