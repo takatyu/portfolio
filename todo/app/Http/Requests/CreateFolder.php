@@ -30,7 +30,7 @@ class CreateFolder extends FormRequest
     }
 
     /**
-     *
+     * バリデーションの:attribute変数
      * {@inheritDoc}
      * @see \Illuminate\Foundation\Http\FormRequest::attributes()
      */
