@@ -8,7 +8,12 @@ use App\Task;
 
 class TaskController extends Controller
 {
-    // index
+
+    /**
+     * 表示処理
+     * @param int $id
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index(int $id) {
         // 全てのフォルダデータを取得
         $folders = Folder::all();
@@ -24,6 +29,18 @@ class TaskController extends Controller
             'folders' => $folders,
             'current_folder_id' => $current_folder->id,
             'tasks' => $tasks,
+        ]);
+    }
+
+    /**
+     * タスク作成画面
+     * @param int $id
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function showCreateForm(int $id) {
+
+        return view('tasks/create', [
+            'folder_id' => $id,
         ]);
     }
 }
