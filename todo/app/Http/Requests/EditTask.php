@@ -13,10 +13,10 @@ class EditTask extends FormRequest
      *
      * @return bool
      */
-//     public function authorize()
-//     {
-//         return false;
-//     }
+    public function authorize()
+    {
+        return true;
+    }
 
     /**
      * バリデーションルール
@@ -26,11 +26,11 @@ class EditTask extends FormRequest
      */
     public function rules()
     {
-        $rule = parent::rules();
+//         $rule = parent::rules();
 
         $status_rule = Rule::in(array_keys(Task::STATUS));
 
-        return $rule + [
+        return [
             'status' => 'required|' . $status_rule,
         ];
     }

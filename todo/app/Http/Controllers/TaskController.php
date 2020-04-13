@@ -91,7 +91,7 @@ class TaskController extends Controller
      * @param EditTask $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit(int $id, int $task_id, Request $request) {
+    public function edit(int $id, int $task_id, EditTask $request) {
         $task = Task::find($task_id);
 
         $task->title = $request->title;
