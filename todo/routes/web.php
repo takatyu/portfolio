@@ -14,6 +14,10 @@
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+// 認証機能
+Auth::routes();
+// ホーム
+Route::get('/', 'HomeController@index')->name('home');
 // タスク一覧ページ
 Route::get('/folders/{id}/tasks', 'TaskController@index')->name('tasks.index');
 // フォルダ作成ページ
