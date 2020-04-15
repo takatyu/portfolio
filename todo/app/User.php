@@ -41,7 +41,7 @@ class User extends Authenticatable
      * フォルダーTBのリレーショナル
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function folder() {
+    public function folders() {
         return $this->hasMany('App\Folder');
     }
 }
