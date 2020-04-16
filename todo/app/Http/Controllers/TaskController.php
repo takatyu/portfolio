@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Folder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Task;
 use App\Http\Requests\CreateTask;
 use App\Http\Requests\EditTask;
@@ -18,7 +19,7 @@ class TaskController extends Controller
      */
     public function index(int $id) {
         // 全てのフォルダデータを取得
-        $folders = Folder::all();
+       $folders = Auth::user()->folders()->get();
 
         // 選ばられたフォルダを取得
         $current_folder = Folder::find($id);
