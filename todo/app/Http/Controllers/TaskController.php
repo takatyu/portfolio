@@ -36,7 +36,7 @@ class TaskController extends Controller
      * @param Folder $folder
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function showCreateForm() {
+    public function showCreateForm(Folder $folder) {
 
         // タスク作成表示
         return view('tasks/create', [
@@ -69,13 +69,13 @@ class TaskController extends Controller
      * @param int $task_id
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function showEditForm(Folder $folder, Task $task) {
+    public function showEditForm(Folder $folder, Task $task_id) {
 
         // 404エラーチェック
-        $this->checkRelation($folder, $task);
+        $this->checkRelation($folder, $task_id);
         // タスク編集ページ表示
         return view('tasks/edit', [
-            'task' => $task,
+            'task' => $task_id,
         ]);
     }
 
@@ -86,19 +86,19 @@ class TaskController extends Controller
      * @param EditTask $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit(Folder $folder, Task $task, EditTask $request) {
+    public function edit(Folder $folder, Task $task_id, EditTask $request) {
         // 404エラーチェック
-        $this->checkRelation($folder, $task);
+        $this->checkRelation($folder, $task_id);
 
-        $task->title = $request->title;
-        $task->status = $request->status;
-        $task->due_date = $request->due_date;
+        $task_id->title = $request->title;
+        $task_id->status = $request->status;
+        $task_id->due_date = $request->due_date;
         // DB更新登録
-        $task->save();
+        $task_id->save();
 
         // リダイレクト：タスク一覧ページ
         return redirect()->route('tasks.index', [
-            'folder' => $task->folder_id,
+            'folder' => $task_id->folder_id,
         ]);
     }
 
@@ -107,8 +107,8 @@ class TaskController extends Controller
      * @param Folder $folder
      * @param Task $task
      */
-    private function checkRelation(Folder $folder, Task $task) {
-        if ($folder->id !== $task->folder_id) {
+    private function checkRelation(Folder $folder, Task $task_id) {
+        if ($folder->id !== $task_id->folder_id) {
             abort(404);
         }
     }
