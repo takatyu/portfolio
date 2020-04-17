@@ -14,37 +14,33 @@ class TaskController extends Controller
 
     /**
      * 表示処理
-     * @param int $id
+     * @param Folder $folder
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index(int $id) {
+    public function index(Folder $folder) {
+
         // 全てのフォルダデータを取得
-       $folders = Auth::user()->folders()->get();
+        $folders = Auth::user()->folders()->get();
 
-        // 選ばられたフォルダを取得
-        $current_folder = Folder::find($id);
-
-        // 選ばれたフォルダに紐づくタスクを取得
-//         $tasks = Task::where('folder_id', $current_folder->id)->get();
-        $tasks = $current_folder->tasks()->get();
+        $tasks = $folder->tasks()->get();
 
         return view('tasks/index', [
             'folders' => $folders,
-            'current_folder_id' => $current_folder->id,
+            'current_folder_id' => $folder->id,
             'tasks' => $tasks,
         ]);
     }
 
     /**
      * タスク作成ページ表示
-     * @param int $id
+     * @param Folder $folder
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function showCreateForm(int $id) {
+    public function showCreateForm(Folder $folder) {
 
         // タスク作成表示
         return view('tasks/create', [
-            'folder_id' => $id,
+            'folder_id' => $folder->id,
         ]);
     }
 
@@ -54,18 +50,16 @@ class TaskController extends Controller
      * @param CreateTask $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create(int $id, CreateTask $request) {
-        $current_folder = Folder::find($id);
-
+    public function create(Folder $folder, CreateTask $request) {
         $task = new Task();
         $task->title = $request->title;
         $task->due_date = $request->due_date;
 
-        $current_folder->tasks()->save($task);
+        $folder->tasks()->save($task);
 
         // リダイレクト：タスク一覧ページ
         return redirect()->route('tasks.index', [
-            'id' => $current_folder->id,
+            'folder' => $folder->id,
         ]);
     }
 
@@ -75,35 +69,47 @@ class TaskController extends Controller
      * @param int $task_id
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function showEditForm(int $id, int $task_id) {
+    public function showEditForm(Folder $folder, Task $task_id) {
 
-        $task = Task::find($task_id);
-
+        // 404エラーチェック
+        $this->checkRelation($folder, $task_id);
         // タスク編集ページ表示
         return view('tasks/edit', [
-            'task' => $task,
+            'task' => $task_id,
         ]);
     }
 
     /**
-     *
+     * タスク編集ポスト処理
      * @param int $id
      * @param int $task_id
      * @param EditTask $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit(int $id, int $task_id, EditTask $request) {
-        $task = Task::find($task_id);
+    public function edit(Folder $folder, Task $task_id, EditTask $request) {
+        // 404エラーチェック
+        $this->checkRelation($folder, $task_id);
 
-        $task->title = $request->title;
-        $task->status = $request->status;
-        $task->due_date = $request->due_date;
+        $task_id->title = $request->title;
+        $task_id->status = $request->status;
+        $task_id->due_date = $request->due_date;
         // DB更新登録
-        $task->save();
+        $task_id->save();
 
         // リダイレクト：タスク一覧ページ
         return redirect()->route('tasks.index', [
-            'id' => $task->folder_id,
+            'folder' => $task_id->folder_id,
         ]);
+    }
+
+    /**
+     * フォルダーとタスクIDが違っていたら404エラー
+     * @param Folder $folder
+     * @param Task $task
+     */
+    private function checkRelation(Folder $folder, Task $task_id) {
+        if ($folder->id !== $task_id->folder_id) {
+            abort(404);
+        }
     }
 }
