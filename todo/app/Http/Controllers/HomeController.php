@@ -13,15 +13,15 @@ class HomeController extends Controller
         $user = Auth::user();
 
         // ログインユーザに紐づくフォルダを一つ取得
-        $forder = $user->folders()->first();
+        $folder = $user->folders()->first();
 
-        if (is_null($forder)) {
+        if (is_null($folder)) {
             // フォルダが0件の場合、フォルダ新規作成ページへ
             return view('home');
         }
 
         return redirect()->route('tasks.index', [
-            'id' => $forder->id,
+            'folder' => $folder->id,
         ]);
     }
 }
