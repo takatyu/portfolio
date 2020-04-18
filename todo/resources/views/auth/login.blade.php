@@ -18,11 +18,11 @@
               @csrf
               <div class="form-group">
                 <label for="email">メールアドレス</label>
-                <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" />
+                <input type="text" class="form-control" id="email" name="email" value="{{ old('email','dummy@email.com') }}" />
               </div>
               <div class="form-group">
                 <label for="password">パスワード</label>
-                <input type="password" class="form-control" id="password" name="password" />
+                <input type="password" class="form-control" id="password" name="password" value="test1234" />
               </div>
               <div class="text-right">
                 <button type="submit" class="btn btn-primary">送信</button>
@@ -31,7 +31,7 @@
           </div>
         </nav>
         <div class="text-center">
-          <a href="{{ route('password.request') }}">パスワードの変更はこちらから</a>
+<!--           <a href="{{ route('password.request') }}">パスワードの変更はこちらから</a> -->
         </div>
       </div>
     </div>
